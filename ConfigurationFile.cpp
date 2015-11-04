@@ -48,10 +48,10 @@ ConfigurationFile::ConfigurationFile() {
         i++;
     }
 
-    this->path = path.c_str();
-    this->password = password.c_str();
+    this->path = (char *) path.c_str();
+    this->password = (char *) password.c_str();
     this->keyId = atoi(keyId.c_str());
-    this->pin = pin.c_str();
+    this->pin = (char *) pin.c_str();
     delete configFile;
 }
 
@@ -69,6 +69,7 @@ void ConfigurationFile::checkIfConfigurationFileExistsExists(const char *path, u
     FILE *input = fopen(path, "rb");
     if (input == NULL) {
         createNewConfigurationFile((unsigned char *) path, key);
+        fclose(input);
     } else {
         fclose(input);
     }

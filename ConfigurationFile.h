@@ -17,10 +17,10 @@ public:
 
     void createNewConfigurationFile(unsigned char *path, unsigned char *key);
 
-    const char *path;
-    const char *password;
+    char *path;
+    char *password;
     int keyId;
-    const char *pin;
+    char *pin;
 };
 
 
