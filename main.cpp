@@ -1,8 +1,8 @@
 #include <iostream>
+#include "ConfigurationFile.h"
 
 using namespace std;
 
 int main() {
-    cout << "Hello, World!" << endl;
-    return 0;
+    ConfigurationFile *configurationFile = new ConfigurationFile();
 }
