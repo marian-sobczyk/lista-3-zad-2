@@ -16,6 +16,36 @@ ConfigurationFile::ConfigurationFile() {
     unsigned char *key = new unsigned char[256];
     resizeKey(key, KEY);
     checkIfConfigurationFileExistsExists("/Users/marian/Desktop/ssl/config.cfg", key);
+
+    FileContent *encodedConfigFile = new FileContent(true);
+    encodedConfigFile->readFromPath("/Users/marian/Desktop/ssl/config.cfg");
+    AESCBCEncryptor *encryptor = new AESCBCEncryptor(256, key);
+    FileContent *configFile = encryptor->decryptData(encodedConfigFile);
+    delete encodedConfigFile;
+    delete encryptor;
+    string path = "";
+    int i = 0;
+    while (configFile->content[i] != ' ') {
+        path = path + (char)configFile->content[i];
+        i++;
+    }
+    string keyId = "";
+    i++;
+    while (configFile->content[i] != ' ') {
+        keyId = keyId + (char)configFile->content[i];
+        i++;
+    }
+    string password = "";
+    i++;
+    while (configFile->content[i] != '\0') {
+        password = password + (char)configFile->content[i];
+        i++;
+    }
+
+    this->path = path.c_str();
+    this->password = password.c_str();
+    this->keyId = atoi(keyId.c_str());
+    delete configFile;
 }
 
 void ConfigurationFile::resizeKey(unsigned char *key, const char *keyToResize) {

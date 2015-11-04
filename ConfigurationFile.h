@@ -16,6 +16,10 @@ public:
     void checkIfConfigurationFileExistsExists(const char *path, unsigned char *key);
 
     void createNewConfigurationFile(unsigned char *path, unsigned char *key);
+
+    const char *path;
+    const char *password;
+    int keyId;
 };
 
 
