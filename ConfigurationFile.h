@@ -20,6 +20,7 @@ public:
     const char *path;
     const char *password;
     int keyId;
+    const char *pin;
 };
 
 

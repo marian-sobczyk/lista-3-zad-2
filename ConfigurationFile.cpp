@@ -26,25 +26,32 @@ ConfigurationFile::ConfigurationFile() {
     string path = "";
     int i = 0;
     while (configFile->content[i] != ' ') {
-        path = path + (char)configFile->content[i];
+        path = path + (char) configFile->content[i];
         i++;
     }
     string keyId = "";
     i++;
     while (configFile->content[i] != ' ') {
-        keyId = keyId + (char)configFile->content[i];
+        keyId = keyId + (char) configFile->content[i];
         i++;
     }
     string password = "";
     i++;
+    while (configFile->content[i] != ' ') {
+        password = password + (char) configFile->content[i];
+        i++;
+    }
+    string pin = "";
+    i++;
     while (configFile->content[i] != '\0') {
-        password = password + (char)configFile->content[i];
+        pin = pin + (char) configFile->content[i];
         i++;
     }
 
     this->path = path.c_str();
     this->password = password.c_str();
     this->keyId = atoi(keyId.c_str());
+    this->pin = pin.c_str();
     delete configFile;
 }
 
@@ -76,8 +83,12 @@ void ConfigurationFile::createNewConfigurationFile(unsigned char *path, unsigned
     cin >> keyId;
     char *password = getpass("Podaj hasło do keystore: ");
     size_t passwordLength = strlen(password);
+    cout << "Podaj PIN: ";
+    string pin;
+    cin >> pin;
 
-    unsigned int length = (unsigned int) (keystorePath.length() + 1 + keyId.length() + 1 + passwordLength);
+    unsigned int length = (unsigned int) (keystorePath.length() + 1 + keyId.length() + 1 + passwordLength + 1 +
+                                          pin.length());
     unsigned char *content = new unsigned char[length];
     int pos = 0;
     for (int i = 0; i < keystorePath.length(); i++) {
@@ -94,6 +105,12 @@ void ConfigurationFile::createNewConfigurationFile(unsigned char *path, unsigned
     pos++;
     for (int i = 0; i < passwordLength; i++) {
         content[pos] = (unsigned char) password[i];
+        pos++;
+    }
+    content[pos] = ' ';
+    pos++;
+    for (int i = 0; i < pin.length(); i++) {
+        content[pos] = (unsigned char) pin.at(i);
         pos++;
     }
 
