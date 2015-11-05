@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ConfigurationFile.h"
 #include "MusicFileFactory.h"
+#include "KeyChain.h"
 
 using namespace std;
 
@@ -15,7 +16,11 @@ int main() {
         return -1;
     }
 
-    ISoundEngine* engine = createIrrKlangDevice();
+    KeyChain *keyChain = new KeyChain((unsigned char *) configurationFile->path,
+                                      (unsigned char *) configurationFile->password, configurationFile->keyId);
+    unsigned char *key = keyChain->key;
+
+    ISoundEngine *engine = createIrrKlangDevice();
 
     if (!engine)
         return 0; // error starting up the engine
@@ -24,7 +29,7 @@ int main() {
     // irrKlang know about it. irrKlang will drop() the
     // factory itself if it doesn't need it any longer.
 
-    MusicFileFactory * factory = new MusicFileFactory();
+    MusicFileFactory *factory = new MusicFileFactory(key);
     engine->addFileFactory(factory);
     factory->drop(); // we don't need it anymore, delete it
 
@@ -36,9 +41,9 @@ int main() {
 
     getchar();
 
-    engine->play2D("/Users/marian/Downloads/Heino_-_Die_Schwarze_Barbara.wav", true);
+    engine->play2D("/Users/marian/Desktop/ssl/encoded.wav", true);
 
-    while(true) // endless loop until user exits
+    while (true) // endless loop until user exits
     {
 //        // play some wave sound
 //        engine->play2D("../../media/explosion.wav");

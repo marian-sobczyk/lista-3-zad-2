@@ -69,3 +69,44 @@ FileContent::FileContent(unsigned char *content, unsigned long length, bool encr
     this->filesize = length;
     this->encrypted = encrypted;
 }
+
+FileContent::FileContent(const char *path) {
+    this->input = fopen(path, "rb");
+    this->encrypted = true;
+    readInitVector();
+}
+
+void FileContent::readInitVector() {
+    if (input == NULL) {
+        return;
+    }
+    fseek(input, 0L, SEEK_END);
+    filesize = (unsigned long) ftell(input);
+    if (encrypted) {
+        filesize -= AES_BLOCK_SIZE;
+        initVector = new unsigned char[AES_BLOCK_SIZE];
+    }
+    fseek(input, 0L, SEEK_SET);
+    content = new unsigned char[filesize];
+    unsigned char character;
+    if (encrypted) {
+        for (int i = 0; i < AES_BLOCK_SIZE; i++) {
+            fread(&character, 1, 1, input);
+            initVector[i] = character;
+        }
+    }
+}
+
+int FileContent::fcread(void *buffer, unsigned int size) {
+//    unsigned char *aaa = new unsigned char[size];
+    return (int) fread(buffer, 1, size, input);
+//    return (int) fread(buffer, 1, size, input);
+}
+
+void FileContent::fcseek(int finalPosition, int type) {
+    fseek(input, finalPosition + AES_BLOCK_SIZE, type);
+}
+
+long FileContent::fctell() {
+    return ftell(input) - AES_BLOCK_SIZE;
+}

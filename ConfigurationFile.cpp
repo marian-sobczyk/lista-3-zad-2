@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include "ConfigurationFile.h"
 #include "FileContent.h"
-#include "AESCBCEncryptor.h"
+#include "AESCTREncryptor.h"
 #include <iostream>
 
 using namespace std;
@@ -19,7 +19,7 @@ ConfigurationFile::ConfigurationFile() {
 
     FileContent *encodedConfigFile = new FileContent(true);
     encodedConfigFile->readFromPath("/Users/marian/Desktop/ssl/config.cfg");
-    AESCBCEncryptor *encryptor = new AESCBCEncryptor(256, key);
+    AESCTREncryptor *encryptor = new AESCTREncryptor(key);
     FileContent *configFile = encryptor->decryptData(encodedConfigFile);
     delete encodedConfigFile;
     delete encryptor;
@@ -48,10 +48,13 @@ ConfigurationFile::ConfigurationFile() {
         i++;
     }
 
-    this->path = (char *) path.c_str();
-    this->password = (char *) password.c_str();
+    this->path = new char[path.length()];
+    memcpy(this->path, path.c_str(), path.length());
+    this->password = new char[password.length()];
+    memcpy(this->password, password.c_str(), password.length());
     this->keyId = atoi(keyId.c_str());
-    this->pin = (char *) pin.c_str();
+    this->pin = new char[pin.length()];
+    memcpy(this->pin, pin.c_str(), pin.length());
     delete configFile;
 }
 
@@ -116,7 +119,7 @@ void ConfigurationFile::createNewConfigurationFile(unsigned char *path, unsigned
     }
 
     FileContent *fileContent = new FileContent(content, length, false);
-    AESCBCEncryptor *encryptor = new AESCBCEncryptor(256, key);
+    AESCTREncryptor *encryptor = new AESCTREncryptor(key);
     FileContent *encrypted = encryptor->encryptData(fileContent);
     encrypted->saveInPath((const char *) path);
     delete content;

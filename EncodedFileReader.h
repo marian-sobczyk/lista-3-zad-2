@@ -6,18 +6,19 @@
 #define LISTA_3_ZAD_2_CMYREADFILE_H
 
 #include <irrKlang.h>
+#include "AESCTREncryptor.h"
 
 using namespace irrklang;
 
 class EncodedFileReader : public IFileReader {
 
 public:
-    EncodedFileReader(FILE *openedFile, const ik_c8 *fileName);
+    EncodedFileReader(FILE *openedFile, const ik_c8 *fileName, unsigned char *key);
 
     virtual ~EncodedFileReader();
 
 
-    FILE*file;
+    AESCTREncryptor *file;
     char fileName[1024];
     ik_s32 fileSize;
 

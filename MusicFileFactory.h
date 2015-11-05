@@ -13,7 +13,12 @@ class MusicFileFactory : public IFileFactory {
 
 
 public:
+    MusicFileFactory(unsigned char *key);
+
     virtual IFileReader *createFileReader(const ik_c8 *filename) override;
+
+private:
+    unsigned char *key;
 };
 
 
