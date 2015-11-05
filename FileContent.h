@@ -31,7 +31,7 @@ public:
 
     int fcread(void *buffer, unsigned int size);
 
-    void fcseek(int finalPosition, int type);
+    int fcseek(int finalPosition, int type);
 
     long fctell();
 

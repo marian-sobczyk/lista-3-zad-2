@@ -60,19 +60,33 @@ int AESCTREncryptor::getSize() {
 ik_s32 AESCTREncryptor::fread(void *buffer, int elementSize, unsigned int size) {
     unsigned char *toDecode = new unsigned char[elementSize];
     ik_s32 fetchedSize = this->fileContent->fcread(toDecode, size);
-    unsigned char *decoded = new unsigned char[fetchedSize];
-    AES_ctr128_encrypt(toDecode, decoded, (const unsigned long) fetchedSize, &dec_key, ivec, ecount, &num);
+    AES_ctr128_encrypt(toDecode, (unsigned char *) buffer, (const unsigned long) fetchedSize, &dec_key, ivec, ecount, &num);
 
-    buffer = decoded;
-//    unsigned char *aaa = (unsigned char *) buffer;
-////    buffer = &decoded;
-////    buffer = new char[fetchedSize];
-//    memcpy(aaa, decoded, (size_t) fetchedSize);
+    free(toDecode);
     return fetchedSize;
 }
 
 int AESCTREncryptor::fseek(ik_s32 finalPosition, int type) {
-    this->fileContent->fcseek(finalPosition, type);
+    if (finalPosition == 0 && type == 0) {
+        initCtr();
+        AES_set_encrypt_key(key, 128, &dec_key);
+    } else if (finalPosition != 0 && type == 1) {
+        unsigned char *temp = new unsigned char[finalPosition];
+        fread(temp, 1, (unsigned int) finalPosition);
+        finalPosition = 0;
+        free(temp);
+    } else if (finalPosition != 0 && type == 0) {
+        initCtr();
+        AES_set_encrypt_key(key, 128, &dec_key);
+        unsigned char *temp = new unsigned char[finalPosition];
+        fread(temp, 1, (unsigned int) finalPosition);
+        free(temp);
+    }
+    if (finalPosition == 0) {
+        return 0;
+    }
+
+    return this->fileContent->fcseek(finalPosition, type);
 }
 
 ik_s32 AESCTREncryptor::ftell() {

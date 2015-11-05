@@ -103,8 +103,8 @@ int FileContent::fcread(void *buffer, unsigned int size) {
 //    return (int) fread(buffer, 1, size, input);
 }
 
-void FileContent::fcseek(int finalPosition, int type) {
-    fseek(input, finalPosition + AES_BLOCK_SIZE, type);
+int FileContent::fcseek(int finalPosition, int type) {
+    return fseek(input, finalPosition + AES_BLOCK_SIZE, type);
 }
 
 long FileContent::fctell() {
