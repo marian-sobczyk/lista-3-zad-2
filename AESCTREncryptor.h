@@ -33,6 +33,8 @@ public:
 
     ik_s32 ftell();
 
+    void closeInput();
+
 private:
     unsigned char *key;
 

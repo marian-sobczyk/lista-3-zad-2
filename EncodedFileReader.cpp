@@ -16,7 +16,7 @@ EncodedFileReader::EncodedFileReader(FILE *openedFile, const ik_c8 *fileName, un
 
 
 EncodedFileReader::~EncodedFileReader() {
-    delete file;
+    file->closeInput();
 }
 
 ik_s32 EncodedFileReader::read(void *buffer, ik_u32 sizeToRead) {

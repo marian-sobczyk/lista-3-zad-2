@@ -35,6 +35,8 @@ public:
 
     long fctell();
 
+    void closeInput();
+
 private:
     FILE *input;
 

@@ -92,3 +92,7 @@ int AESCTREncryptor::fseek(ik_s32 finalPosition, int type) {
 ik_s32 AESCTREncryptor::ftell() {
     return (ik_s32) fileContent->fctell();
 }
+
+void AESCTREncryptor::closeInput() {
+    fileContent->closeInput();
+}

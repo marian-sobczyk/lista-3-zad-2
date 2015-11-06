@@ -110,3 +110,7 @@ int FileContent::fcseek(int finalPosition, int type) {
 long FileContent::fctell() {
     return ftell(input) - AES_BLOCK_SIZE;
 }
+
+void FileContent::closeInput() {
+    fclose(input);
+}
