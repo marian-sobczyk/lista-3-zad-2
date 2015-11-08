@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <openssl/aes.h>
 #include <string.h>
+#include <stdlib.h>
 #include "FileContent.h"
 
 void FileContent::readFromPath(const char *path) {
@@ -98,13 +99,20 @@ void FileContent::readInitVector() {
 }
 
 int FileContent::fcread(void *buffer, unsigned int size) {
-//    unsigned char *aaa = new unsigned char[size];
-    return (int) fread(buffer, 1, size, input);
-//    return (int) fread(buffer, 1, size, input);
+    int length = (int) fread(buffer, 1, size, input);
+    if (ftell(input) >= filesize + AES_BLOCK_SIZE) {
+        exit(0);
+    }
+
+    return length;
 }
 
 int FileContent::fcseek(int finalPosition, int type) {
-    return fseek(input, finalPosition + AES_BLOCK_SIZE, type);
+    int position = finalPosition;
+    if (type == SEEK_SET) {
+        position = position + AES_BLOCK_SIZE;
+    }
+    return fseek(input, position, type);
 }
 
 long FileContent::fctell() {

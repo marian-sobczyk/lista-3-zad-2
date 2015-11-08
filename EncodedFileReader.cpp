@@ -21,8 +21,6 @@ EncodedFileReader::~EncodedFileReader() {
 
 ik_s32 EncodedFileReader::read(void *buffer, ik_u32 sizeToRead) {
     ik_s32 aaa = (ik_s32)file->fread(buffer, 1, sizeToRead);
-    unsigned char *test = (unsigned char *) buffer;
-
     return aaa;
 }
 

@@ -62,7 +62,6 @@ ik_s32 AESCTREncryptor::fread(void *buffer, int elementSize, unsigned int size) 
     ik_s32 fetchedSize = this->fileContent->fcread(toDecode, size);
     AES_ctr128_encrypt(toDecode, (unsigned char *) buffer, (const unsigned long) fetchedSize, &dec_key, ivec, ecount, &num);
 
-//    free(toDecode);
     return fetchedSize;
 }
 
